@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Tile } from '../types/mahjong';
 import { cn } from '../lib/utils';
@@ -6,7 +5,7 @@ import { cn } from '../lib/utils';
 interface MahjongTileProps {
   tile: Tile;
   selected?: boolean;
-  onClick?: () =&gt; void;
+  onClick?: () => void;
   hidden?: boolean;
   size?: 'sm' | 'md' | 'lg';
 }
@@ -20,80 +19,80 @@ export default function MahjongTile({ tile, selected, onClick, hidden, size = 'm
   
   if (hidden) {
     return (
-      &lt;div className={cn(
+      <div className={cn(
         'rounded-lg shadow-md border-2 border-amber-800',
         'bg-gradient-to-br from-amber-700 to-amber-900',
         sizeClasses[size]
-      )}&gt;
-        &lt;div className='w-full h-full flex items-center justify-center'&gt;
-          &lt;div className='w-3/4 h-3/4 border-2 border-amber-600 rounded'&gt;&lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
+      )}>
+        <div className='w-full h-full flex items-center justify-center'>
+          <div className='w-3/4 h-3/4 border-2 border-amber-600 rounded'></div>
+        </div>
+      </div>
     );
   }
   
-  const getTileContent = () =&gt; {
+  const getTileContent = () => {
     switch (tile.suit) {
       case 'wan':
         return (
-          &lt;div className='text-red-800 font-bold'&gt;
-            &lt;div className='text-lg'&gt;{tile.value}&lt;/div&gt;
-            &lt;div className='text-xs'&gt;万&lt;/div&gt;
-          &lt;/div&gt;
+          <div className='text-red-800 font-bold'>
+            <div className='text-lg'>{tile.value}</div>
+            <div className='text-xs'>万</div>
+          </div>
         );
       case 'tong':
         return (
-          &lt;div className='flex flex-col items-center'&gt;
-            {[...Array(tile.value)].map((_, i) =&gt; (
-              &lt;div key={i} className='w-3 h-3 rounded-full bg-blue-600 mb-0.5'&gt;&lt;/div&gt;
+          <div className='flex flex-col items-center'>
+            {Array.from({ length: tile.value }).map((_, i) => (
+              <div key={i} className='w-3 h-3 rounded-full bg-blue-600 mb-0.5'></div>
             ))}
-          &lt;/div&gt;
+          </div>
         );
       case 'tiao':
         return (
-          &lt;div className='flex flex-col items-center'&gt;
+          <div className='flex flex-col items-center'>
             {tile.value === 1 ? (
-              &lt;div className='text-green-700 text-xl'&gt;🀇&lt;/div&gt;
+              <div className='text-green-700 text-xl'>🀇</div>
             ) : (
-              &lt;div className='text-green-800 font-bold'&gt;
+              <div className='text-green-800 font-bold'>
                 {tile.value}条
-              &lt;/div&gt;
+              </div>
             )}
-          &lt;/div&gt;
+          </div>
         );
       case 'dong':
-        return &lt;div className='text-2xl'&gt;🀀&lt;/div&gt;;
+        return <div className='text-2xl'>🀀</div>;
       case 'nan':
-        return &lt;div className='text-2xl'&gt;🀁&lt;/div&gt;;
+        return <div className='text-2xl'>🀁</div>;
       case 'xi':
-        return &lt;div className='text-2xl'&gt;🀂&lt;/div&gt;;
+        return <div className='text-2xl'>🀂</div>;
       case 'bei':
-        return &lt;div className='text-2xl'&gt;🀃&lt;/div&gt;;
+        return <div className='text-2xl'>🀃</div>;
       case 'bai':
-        return &lt;div className='text-2xl'&gt;🀆&lt;/div&gt;;
+        return <div className='text-2xl'>🀆</div>;
       case 'fa':
-        return &lt;div className='text-2xl text-green-700'&gt;🀅&lt;/div&gt;;
+        return <div className='text-2xl text-green-700'>🀅</div>;
       case 'zhong':
-        return &lt;div className='text-2xl text-red-700'&gt;🀄&lt;/div&gt;;
+        return <div className='text-2xl text-red-700'>🀄</div>;
       default:
         return null;
     }
   };
   
   return (
-    &lt;div
+    <div
       onClick={onClick}
       className={cn(
         'rounded-lg shadow-md border-2 transition-all duration-150 cursor-pointer',
         'bg-gradient-to-br from-amber-50 to-amber-100 border-amber-300',
         selected ? 'ring-4 ring-yellow-400 transform -translate-y-2 shadow-lg' : 'hover:transform hover:-translate-y-1',
         sizeClasses[size],
-        onClick &amp;&amp; 'hover:shadow-lg'
+        onClick && 'hover:shadow-lg'
       )}
-    &gt;
-      &lt;div className='w-full h-full flex items-center justify-center'&gt;
+    >
+      <div className='w-full h-full flex items-center justify-center'>
         {getTileContent()}
-      &lt;/div&gt;
-    &lt;/div&gt;
+      </div>
+    </div>
   );
 }

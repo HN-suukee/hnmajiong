@@ -1,30 +1,33 @@
-
 import { create } from 'zustand';
 import { GameState, Action, Tile } from '../types/mahjong';
 import {
-  initGame, drawTile, nextPlayer, performAction, getPossibleActions,
+  initGame,
+  drawTile,
+  nextPlayer,
+  performAction,
+  getPossibleActions,
   canHu
 } from '../utils/mahjongLogic';
-import { aiSelectDiscard, aiSelectAction } from '../utils/aiPlayer';
+import { aiSelectDiscard } from '../utils/aiPlayer';
 
 interface GameStore {
   gameState: GameState;
   selectedTile: Tile | null;
   isProcessing: boolean;
   
-  startGame: () =&gt; void;
-  selectTile: (tile: Tile | null) =&gt; void;
-  discardTile: (tile: Tile) =&gt; void;
-  performPlayerAction: (action: Action) =&gt; void;
-  processAITurn: () =&gt; void;
+  startGame: () => void;
+  selectTile: (tile: Tile | null) => void;
+  discardTile: (tile: Tile) => void;
+  performPlayerAction: (action: Action) => void;
+  processAITurn: () => void;
 }
 
-export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
+export const useGameStore = create<GameStore>((set, get) => ({
   gameState: initGame(),
   selectedTile: null,
   isProcessing: false,
   
-  startGame: () =&gt; {
+  startGame: () => {
     set({
       gameState: initGame(),
       selectedTile: null,
@@ -32,11 +35,11 @@ export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
     });
   },
   
-  selectTile: (tile: Tile | null) =&gt; {
+  selectTile: (tile: Tile | null) => {
     set({ selectedTile: tile });
   },
   
-  discardTile: (tile: Tile) =&gt; {
+  discardTile: (tile: Tile) => {
     const { gameState } = get();
     const player = gameState.players[gameState.currentPlayer];
     
@@ -47,12 +50,12 @@ export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
     
     set({ gameState: newState, selectedTile: null, isProcessing: true });
     
-    setTimeout(() =&gt; {
+    setTimeout(() => {
       get().processAITurn();
     }, 800);
   },
   
-  performPlayerAction: (action: Action) =&gt; {
+  performPlayerAction: (action: Action) => {
     const { gameState } = get();
     
     if (action.type === 'hu') {
@@ -72,7 +75,7 @@ export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
       newState.currentPlayer = nextPlayer(newState.currentPlayer);
       
       set({ gameState: newState, isProcessing: true });
-      setTimeout(() =&gt; {
+      setTimeout(() => {
         get().processAITurn();
       }, 500);
       return;
@@ -87,7 +90,7 @@ export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
     }
   },
   
-  processAITurn: () =&gt; {
+  processAITurn: () => {
     const { gameState } = get();
     
     if (gameState.isOver) {
@@ -98,8 +101,8 @@ export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
     let current = gameState.currentPlayer;
     let state = { ...gameState };
     
-    while (!state.players[current].isHuman &amp;&amp; !state.isOver) {
-      if (state.wall.length &gt; 0) {
+    while (!state.players[current].isHuman && !state.isOver) {
+      if (state.wall.length > 0) {
         state = drawTile(state);
       } else {
         state.isOver = true;
@@ -121,7 +124,7 @@ export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
       
       if (state.players[0].isHuman) {
         const actions = getPossibleActions(state, 0, state.lastDiscard);
-        if (actions.length &gt; 0) {
+        if (actions.length > 0) {
           state.waitingForAction = true;
           state.possibleActions = actions;
           set({ gameState: state, isProcessing: false });
@@ -132,7 +135,7 @@ export const useGameStore = create&lt;GameStore&gt;((set, get) =&gt; ({
       set({ gameState: state });
     }
     
-    if (state.players[current].isHuman &amp;&amp; state.wall.length &gt; 0) {
+    if (state.players[current].isHuman && state.wall.length > 0) {
       state = drawTile(state);
       set({ gameState: state, isProcessing: false });
     } else {
