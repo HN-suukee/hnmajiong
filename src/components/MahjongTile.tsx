@@ -16,7 +16,21 @@ export default function MahjongTile({ tile, selected, onClick, hidden, size = 'm
     md: 'w-12 h-16 text-sm',
     lg: 'w-16 h-22 text-base'
   };
-  
+
+  // 获取麻将牌图片的URL
+  const getTileImageUrl = () => {
+    if (tile.suit === 'wan') {
+      return `/images/mahjong/wan-${tile.value}.png`;
+    } else if (tile.suit === 'tong') {
+      return `/images/mahjong/tong-${tile.value}.png`;
+    } else if (tile.suit === 'tiao') {
+      return `/images/mahjong/tiao-${tile.value}.png`;
+    }
+    return null;
+  };
+
+  const imageUrl = getTileImageUrl();
+
   if (hidden) {
     return (
       <div className={cn(
@@ -30,55 +44,43 @@ export default function MahjongTile({ tile, selected, onClick, hidden, size = 'm
       </div>
     );
   }
-  
-  const getTileContent = () => {
-    switch (tile.suit) {
-      case 'wan':
-        return (
-          <div className='text-red-800 font-bold'>
-            <div className='text-lg'>{tile.value}</div>
-            <div className='text-xs'>万</div>
-          </div>
-        );
-      case 'tong':
-        return (
-          <div className='flex flex-col items-center'>
-            {Array.from({ length: tile.value }).map((_, i) => (
-              <div key={i} className='w-3 h-3 rounded-full bg-blue-600 mb-0.5'></div>
-            ))}
-          </div>
-        );
-      case 'tiao':
-        return (
-          <div className='flex flex-col items-center'>
-            {tile.value === 1 ? (
-              <div className='text-green-700 text-xl'>🀇</div>
-            ) : (
-              <div className='text-green-800 font-bold'>
-                {tile.value}条
-              </div>
-            )}
-          </div>
-        );
-      case 'dong':
-        return <div className='text-2xl'>🀀</div>;
-      case 'nan':
-        return <div className='text-2xl'>🀁</div>;
-      case 'xi':
-        return <div className='text-2xl'>🀂</div>;
-      case 'bei':
-        return <div className='text-2xl'>🀃</div>;
-      case 'bai':
-        return <div className='text-2xl'>🀆</div>;
-      case 'fa':
-        return <div className='text-2xl text-green-700'>🀅</div>;
-      case 'zhong':
-        return <div className='text-2xl text-red-700'>🀄</div>;
-      default:
-        return null;
-    }
+
+  // 如果有图片则显示图片，否则显示文字
+  if (imageUrl) {
+    return (
+      <div
+        onClick={onClick}
+        className={cn(
+          'rounded-lg shadow-md border-2 transition-all duration-150 cursor-pointer overflow-hidden',
+          'bg-gradient-to-br from-amber-50 to-amber-100 border-amber-300',
+          selected ? 'ring-4 ring-yellow-400 transform -translate-y-2 shadow-lg' : 'hover:transform hover:-translate-y-1',
+          sizeClasses[size],
+          onClick && 'hover:shadow-lg'
+        )}
+      >
+        <img
+          src={imageUrl}
+          alt={`${tile.suit} ${tile.value}`}
+          className='w-full h-full object-cover'
+        />
+      </div>
+    );
+  }
+
+  // 字牌使用Emoji显示
+  const getHonorTileContent = () => {
+    const honorTiles: Record<string, string> = {
+      'dong': '🀀',
+      'nan': '🀁',
+      'xi': '🀂',
+      'bei': '🀃',
+      'bai': '🀆',
+      'fa': '🀅',
+      'zhong': '🀄',
+    };
+    return honorTiles[tile.suit] || '?';
   };
-  
+
   return (
     <div
       onClick={onClick}
@@ -91,7 +93,7 @@ export default function MahjongTile({ tile, selected, onClick, hidden, size = 'm
       )}
     >
       <div className='w-full h-full flex items-center justify-center'>
-        {getTileContent()}
+        <div className='text-2xl'>{getHonorTileContent()}</div>
       </div>
     </div>
   );
